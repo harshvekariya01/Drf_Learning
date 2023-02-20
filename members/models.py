@@ -11,8 +11,11 @@ class student(models.Model):
 
 class Profession(models.Model):
     name =  models.CharField(max_length=100)
+    roll = models.IntegerField(null=True)
     active  = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
+
+
   

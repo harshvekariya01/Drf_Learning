@@ -1,17 +1,41 @@
 from rest_framework import status
 from django.shortcuts import render
-from django.http import HttpResponseNotAllowed
 from rest_framework.response import Response
 from rest_framework import viewsets
 from .serializers import  studentSerializer,ProfessionSerializer
 from .models import Profession, student
-from rest_framework.decorators import action
+
+
+
+class Professionviewset(viewsets.ModelViewSet):
+    serializer_class = ProfessionSerializer
+    queryset =  Profession.objects.all()
+    lookup_field = 'id'
+
+    # def list(self, request, *args, **kwargs):
+    #     lists = Profession.objects.all()
+    #     serializer = ProfessionSerializer(lists,many=True)
+    #     return Response(serializer.data)    
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     id = kwargs['id']
+    #     queryset = Profession.objects.get(id=self.kwargs['id'])
+    #     queryset = self.get_object()
+    #     serializer = ProfessionSerializer(queryset)
+    #     return Response(serializer.data)
+
+    # def create(self, request, *args, **kwargs):
+    #     data = request.data
+    #     creates = Profession.objects.create(name=data['name'])
+    #     creates.save()
+    #     serializer = ProfessionSerializer(creates)
+    #     return Response(serializer.data)
 
 
 class studentviewset(viewsets.ModelViewSet):
     serializer_class = studentSerializer
     lookup_field = 'id'
-    
+
     def list(self, request, *args, **kwargs):
         lists = student.objects.all()
         serializer = self.serializer_class(lists,many=True)
@@ -39,14 +63,12 @@ class studentviewset(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    
-    
+
     def destroy(self, request, *args, **kwargs):
         id = kwargs['id']
         queryset = student.objects.get(id=self.kwargs['id'])
         queryset.delete()
         return Response('data has been deleted')
-    
 
     
     def update(self,request, *args, **kwargs):
@@ -68,96 +90,7 @@ class studentviewset(viewsets.ModelViewSet):
     
 
 
-class Professionviewset(viewsets.ModelViewSet):
-    serializer_class = ProfessionSerializer
-    lookup_field = 'id'
-    
-    def list(self, request, *args, **kwargs):
-        lists = Profession.objects.all()
-        serializer = ProfessionSerializer(lists,many=True)
-        return Response(serializer.data)
 
-    def retrieve(self, request, *args, **kwargs):
-        id = kwargs['id']
-        queryset = Profession.objects.get(id=self.kwargs['id'])
-        serializer = ProfessionSerializer(queryset)
-        return Response(serializer.data)
-
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        creates = Profession.objects.create(name=data['name'])
-        creates.save()
-        serializer = ProfessionSerializer(creates)
-        return Response(serializer.data)
-    
-    def put(self,request, *args, **kwargs):
-        id = kwargs['id']
-        queryset = Profession.objects.filter(id=self.kwargs['id'])
-        serializer = self.serializer_class(queryset, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def destroy(self, request, *args, **kwargs):
-        id = kwargs['id']
-        queryset = Profession.objects.get(id=self.kwargs['id'])
-        queryset.delete()
-        return Response('data has been deleted')
-    
-
-
-
-    # def patch(self,request, *args, **kwargs):
-    #     id = kwargs['id']
-    #     queryset = Profession.objects.filter(id=self.kwargs['id'])
-    #     serializer = self.serializer_class(queryset, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self,request, *args, **kwargs):
-        id = kwargs['id']
-        print(request.data['name'],"===============================================")
-        queryset = Profession.objects.get(id=self.kwargs['id'])
-        queryset.name = request.data['name']
-        serializer = self.serializer_class(queryset,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    
-    # @action(detail=True)
-    # def deactivate(self,request,*args,**kwargs):
-    #     id = kwargs['id']
-    #     # print(request.data['name'],"===============================================")
-    #     queryset = Profession.objects.get(id=self.kwargs['id'])
-    #     queryset.active = False 
-    #     serializer = self.serializer_class(queryset,data=request.data)
-    #     if serializer.is_valid():
-
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return HttpResponseNotAllowed('not valid')
-
-
-    # def deactivateall(self,request,*args,**kwargs):
-    #     id = kwargs['id']
-    #     queryset = Profession.objects.get(id=self.kwargs['id'])
-    #     queryset.active = False
-
-    #     serializer = self.serializer_class(queryset)
-    #     serializer.save()
-
-    
-
-    
-    
-
-    
 
         
 

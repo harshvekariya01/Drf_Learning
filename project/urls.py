@@ -5,7 +5,7 @@ from django.urls import path,include
 
 # router = routers.DefaultRouter()
 # router.register('studentviewset', studentviewset,basename="student"),
-# router.register('Professionviewset', Professionviewset,basename="Profession")
+# router.register('Professionviewset/', Professionviewset,basename="Profession")
 
 
 

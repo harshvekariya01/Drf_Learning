@@ -11,5 +11,5 @@ class studentSerializer(serializers.ModelSerializer):
 class ProfessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession
-        fields = ('id','name','active')
+        fields = ('id','name','roll','active')
 
