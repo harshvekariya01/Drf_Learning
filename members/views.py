@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from .serializers import  studentSerializer,ProfessionSerializer
 from .models import Profession, student
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated,DjangoModelPermissionsOrAnonReadOnly,DjangoModelPermissions, IsAuthenticatedOrReadOnly
+
 
 
 
@@ -11,6 +14,14 @@ class Professionviewset(viewsets.ModelViewSet):
     serializer_class = ProfessionSerializer
     queryset =  Profession.objects.all()
     lookup_field = 'id'
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [DjangoModelPermissions]
+    permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
+
+
 
     # def list(self, request, *args, **kwargs):
     #     lists = Profession.objects.all()
@@ -24,17 +35,30 @@ class Professionviewset(viewsets.ModelViewSet):
     #     serializer = ProfessionSerializer(queryset)
     #     return Response(serializer.data)
 
-    # def create(self, request, *args, **kwargs):
-    #     data = request.data
-    #     creates = Profession.objects.create(name=data['name'])
-    #     creates.save()
-    #     serializer = ProfessionSerializer(creates)
-    #     return Response(serializer.data)
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        print(data,'=============================')
+        creates = Profession.objects.create(name=data['name'],
+                                            roll_profrssion=data['roll_profrssion'],
+                                           active=data['active'],
+                                            profession_no_id=data['profession_no'])
+        creates.save()
+        serializer = ProfessionSerializer(creates)
+        return Response(serializer.data)
+
+    # def destroy(self, request, *args, **kwargs):
+    #     id = kwargs['id']
+    #     queryset = Profession.objects.get(id=self.kwargs['id'])
+    #     queryset.delete()
+    #     return Response('data has been deleted')
+
+    
 
 
 class studentviewset(viewsets.ModelViewSet):
     serializer_class = studentSerializer
     lookup_field = 'id'
+
 
     def list(self, request, *args, **kwargs):
         lists = student.objects.all()
@@ -88,7 +112,7 @@ class studentviewset(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
+ 
 
 
 
